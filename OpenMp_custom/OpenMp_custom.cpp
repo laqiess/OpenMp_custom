@@ -1,20 +1,68 @@
-﻿// OpenMp_custom.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
+﻿// ConsoleApplication_openmp_pi.cpp
+
+// author: Ключерев Артем
+// формула вычисления числа pi: https://habr.com/ru/articles/128454/
 
 #include <iostream>
+#include <omp.h>
+#include <random>
+#include <chrono>
+#include "PiCircle.h"
 
-int main()
-{
-    std::cout << "Hello World!\n";
+using namespace std;
+
+// функция для получение числа потоков
+int get_Num_threads() {
+    int num_threads = 0;
+
+    // директивf OpenMP, которая указывает компилятору, что следующий блок кода должен выполняться параллельно
+#pragma omp parallel reduction(+:num_threads) 
+    num_threads += 1;
+
+    return num_threads;
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
+int main() {
 
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
+    setlocale(LC_ALL, "Russian");
+    const int num_points = 10'000'000; // Общее количество точек используемых для вычисления числа π
+
+    srand(time(nullptr));
+
+
+    // начало измерения времени
+    auto startTime = chrono::high_resolution_clock::now();
+
+    double pi = count_pi(num_points);
+
+
+    // конец измерения времени
+    auto endTime = chrono::high_resolution_clock::now();
+
+    // рассчитываем время выполнения перемножения
+    auto duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
+
+    std::cout << "Результат вычисления значения pi без распараллеливания: " << pi << std::endl;
+    std::cout << "Время выполнения: " << duration << endl << endl;
+
+
+    // начало измерения времени
+    auto startTime1 = chrono::high_resolution_clock::now();
+
+    pi = count_pi_parallel(num_points);
+
+
+
+    // конец измерения времени
+    auto endTime1 = chrono::high_resolution_clock::now();
+
+    // рассчитываем время выполнения перемножения
+    auto duration1 = chrono::duration_cast<chrono::milliseconds>(endTime1 - startTime1).count();
+    std::cout << "Результат вычисления значения pi c использованием библиотеки OpenMP: " << pi << std::endl;
+    std::cout << "Время выполнения: " << duration1 << endl << endl;
+    //std::cout << "Вычисленное значение Pi: " << pi << std::endl;
+
+    cout << "Число потоков: " << get_Num_threads() << endl;
+
+    return 0;
+}
