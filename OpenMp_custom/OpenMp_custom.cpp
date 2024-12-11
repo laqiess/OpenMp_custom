@@ -40,10 +40,10 @@ int main() {
     auto endTime = chrono::high_resolution_clock::now();
 
     // рассчитываем время выполнения перемножения
-    auto duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
+    auto duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
 
     std::cout << "Результат вычисления значения pi без распараллеливания: " << pi << std::endl;
-    std::cout << "Время выполнения: " << duration << endl << endl;
+    std::cout << "Время выполнения: " << duration <<" наносекнуд" << endl << endl;
 
 
     // начало измерения времени
@@ -57,9 +57,9 @@ int main() {
     auto endTime1 = chrono::high_resolution_clock::now();
 
     // рассчитываем время выполнения перемножения
-    auto duration1 = chrono::duration_cast<chrono::milliseconds>(endTime1 - startTime1).count();
+    auto duration1 = chrono::duration_cast<chrono::nanoseconds>(endTime1 - startTime1).count();
     std::cout << "Результат вычисления значения pi c использованием библиотеки OpenMP: " << pi << std::endl;
-    std::cout << "Время выполнения: " << duration1 << endl << endl;
+    std::cout << "Время выполнения: " << duration1 << " наносекнуд" << endl << endl;
     //std::cout << "Вычисленное значение Pi: " << pi << std::endl;
 
     cout << "Число потоков: " << get_Num_threads() << endl;
